@@ -1,0 +1,25 @@
+sudo: required
+services: 
+  - docker
+
+before_install:
+  - docker build -t besenti/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run besenti/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t besenti/multi-client ./client
+  - docker build -t besenti/multi-nginx ./nginx
+  - docker build -t besenti/multi-server ./server
+  - docker build -t besenti/multi-worker ./worker
+
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  # Take the above images and push them to docker hub
+  - docker push besenti/multi-client
+  - docker push besenti/multi-nginx
+  - docker push besenti/multi-server
+  - docker push besenti/multi-worker
+   
