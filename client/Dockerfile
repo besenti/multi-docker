@@ -1,9 +1,9 @@
-FROM node:16-bullseye as builder
+FROM node:latest as builder
 WORKDIR '/app'
 COPY ./package.json ./
 RUN npm install
 COPY . .
-RUN #!/bin/sh npm run build
+RUN npm run build
 
 FROM nginx
 EXPOSE 3000
