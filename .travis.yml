@@ -9,10 +9,10 @@ script:
   - docker run -e CI=true besenti/react-test npm test -- --coverage
 
 after_success:
-  - docker build --platform linux/arm64 -t besenti/multi-client ./client
-  - docker build --platform linux/arm64 -t besenti/multi-nginx ./nginx
-  - docker build --platform linux/arm64 -t besenti/multi-server ./server
-  - docker build --platform linux/arm64 -t besenti/multi-worker ./worker
+  - docker buildx --platform linux/arm64,linux/amd64 -t besenti/multi-client ./client
+  - docker buildx --platform linux/arm64,linux/amd64 -t besenti/multi-nginx ./nginx
+  - docker buildx --platform linux/arm64,linux/amd64 -t besenti/multi-server ./server
+  - docker buildx --platform linux/arm64,linux/amd64 -t besenti/multi-worker ./worker
 
   # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
